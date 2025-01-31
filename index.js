@@ -28,7 +28,7 @@ function main() {
       - clear: Clear the current linked list
       - q: Quit the terminal
   `);
-}
+} 
 
 // Command handling logic
 async function handleCommand(command) {
@@ -37,7 +37,7 @@ async function handleCommand(command) {
   switch (operation) {
     case 'add':
       /**
-       * TODO:
+       * 
        *  Finds a particular student by email, and returns their information
        *  You will need to do the following:
        *   - Implement LinkedList (run tests locally to check implementation)
@@ -47,13 +47,20 @@ async function handleCommand(command) {
         console.log('Adding student...')
         const [name, year, email, specialization] = args
         // --------> WRITE YOUR CODE BELOW
+        const newStudent = new Student(name, Number(year), email, specialization);
+
+        studentManagementSystem.addStudent(newStudent);
+
+        const foundEMail = studentManagementSystem.findStudent(email);
+      
+        studentManagementSystem.displayStudents();
 
         // --------> WRITE YOUR CODE ABOVE
         break;
 
     case 'remove':
       /**
-       * TODO:
+       * 
        *  Removes a particular student by email
        *  You will need to do the following:
        *   - Implement LinkedList (run tests locally to check implementation)
@@ -63,25 +70,28 @@ async function handleCommand(command) {
       console.log('Removing student...')
       // --------> WRITE YOUR CODE BELOW
       
+      studentManagementSystem.removeStudent(args);
+      
       // --------> WRITE YOUR CODE ABOVE
       break;
 
     case 'display':
       /**
-       * TODO:
+       * 
        *  Displays the students in the Linked List
        *  You will need to do the following:
        *   - Use implemneted functions in LinkedList to display the student
        */
       console.log('Displaying students...')
       // --------> WRITE YOUR CODE BELOW
+      studentManagementSystem.displayStudents();
 
       // --------> WRITE YOUR CODE ABOVE
       break;
 
     case 'find':
       /**
-       * TODO:
+       * 
        *  Finds a particular student by email, and returns their information
        *  You will need to do the following:
        *   - Implement LinkedList (run tests locally to check implementation)
@@ -91,13 +101,21 @@ async function handleCommand(command) {
        */
       console.log('Finding student...')
       // --------> WRITE YOUR CODE BELOW
-      
+      const [findEmail] = args;
+
+      const result = studentManagementSystem.findStudent(findEmail);
+
+      if(result === -1) {
+        console.log("Student does not exsit");
+      } else {
+        console.log("Found student: ", result);
+      }
       // --------> WRITE YOUR CODE ABOVE
       break;
 
     case 'save':
       /**
-       * TODO:
+       * 
        *  Saves the current LinkedList to a specified JSON file
        *  You will need to do the following:
        *   - Implement LinkedList (run tests locally to check implementation)
@@ -106,12 +124,14 @@ async function handleCommand(command) {
        */
       console.log('Saving data...')
       // --------> WRITE YOUR CODE BELOW
+      const [saveFileName] = args;
+      studentManagementSystem.saveToJson(saveFileName);
 
       // --------> WRITE YOUR CODE ABOVE
 
     case "load":
       /**
-       * TODO:
+       * 
        *  Loads data from specified JSON file into current Linked List
        *  You will need to do the following:
        *   - Implement LinkedList (run tests locally to check implementation)
@@ -120,13 +140,17 @@ async function handleCommand(command) {
        */
       console.log('Loading data...')
       // --------> WRITE YOUR CODE BELOW
+      const [loadFileName] = args;
+      studentManagementSystem.loadFromJSON(loadFileName);
+      console.log("Loaded data: ", studentManagementSystem.displayStudents());
+
 
       // --------> WRITE YOUR CODE ABOVE
       break;
 
     case 'clear':
       /**
-       * TODO:
+       * 
        *  Clears all data in the Linked List
        *  You will need to do the following:
        *   - Implement LinkedList (run tests locally to check implementation)
@@ -134,6 +158,7 @@ async function handleCommand(command) {
        */
       console.log('Clearing data...')
       // --------> WRITE YOUR CODE BELOW
+      studentManagementSystem.clearStudents();
 
       // --------> WRITE YOUR CODE ABOVE
       break;
