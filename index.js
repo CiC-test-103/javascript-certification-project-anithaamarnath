@@ -131,10 +131,7 @@ async function handleCommand(command) {
       // --------> WRITE YOUR CODE BELOW
       const [saveFileName] = args;
         studentManagementSystem.saveToJson(saveFileName);
-        // console.log("Saving data: ", studentManagementSystem.displayStudents());
-      // } catch (error) {
-      //   console.log("Error loading data: ", error.message);
-      // }
+       
 
       // --------> WRITE YOUR CODE ABOVE
 
@@ -151,7 +148,7 @@ async function handleCommand(command) {
       // --------> WRITE YOUR CODE BELOW
       const [loadFileName] = args;
         studentManagementSystem.loadFromJSON(loadFileName);
-        // console.log("Loaded data: ", studentManagementSystem.displayStudents());
+        console.log("Loaded data: ", studentManagementSystem.displayStudents());
 
 
       // --------> WRITE YOUR CODE ABOVE
