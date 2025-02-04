@@ -74,7 +74,7 @@ async function handleCommand(command) {
       
       studentManagementSystem.removeStudent(args);
 
-      console.log(studentManagementSystem.displayStudents().length());
+      console.log(studentManagementSystem.displayStudents());
       
       // --------> WRITE YOUR CODE ABOVE
       break;
