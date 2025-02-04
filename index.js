@@ -2,6 +2,7 @@
 const { LinkedList } = require("./LinkedList");
 const { Student } = require('./Student')
 const readline = require('readline');
+const NOT_FOUND = -1;
 
 // Initialize terminal interface
 const rl = readline.createInterface({
@@ -47,13 +48,14 @@ async function handleCommand(command) {
         console.log('Adding student...')
         const [name, year, email, specialization] = args
         // --------> WRITE YOUR CODE BELOW
+   
         const newStudent = new Student(name, Number(year), email, specialization);
 
         studentManagementSystem.addStudent(newStudent);
-
-        const foundEMail = studentManagementSystem.findStudent(email);
-      
-        studentManagementSystem.displayStudents();
+          
+        const foundEmail = studentManagementSystem.findStudent(email);
+        
+        console.log(`Found student: ${foundEmail.getName()}, Email: ${foundEmail.getEmail()}`);
 
         // --------> WRITE YOUR CODE ABOVE
         break;
@@ -71,6 +73,8 @@ async function handleCommand(command) {
       // --------> WRITE YOUR CODE BELOW
       
       studentManagementSystem.removeStudent(args);
+
+      console.log(studentManagementSystem.displayStudents().length());
       
       // --------> WRITE YOUR CODE ABOVE
       break;
@@ -84,7 +88,8 @@ async function handleCommand(command) {
        */
       console.log('Displaying students...')
       // --------> WRITE YOUR CODE BELOW
-      studentManagementSystem.displayStudents();
+      console.log(studentManagementSystem.displayStudents());
+      
 
       // --------> WRITE YOUR CODE ABOVE
       break;
@@ -103,12 +108,12 @@ async function handleCommand(command) {
       // --------> WRITE YOUR CODE BELOW
       const [findEmail] = args;
 
-      const result = studentManagementSystem.findStudent(findEmail);
+      const result = studentManagementSystem.findStudent(findEmail.trim());
 
-      if(result === -1) {
+      if(result === NOT_FOUND) {
         console.log("Student does not exsit");
       } else {
-        console.log("Found student: ", result);
+        console.log(`Found student: ${result.getName()}, Email: ${result.getEmail()}`);
       }
       // --------> WRITE YOUR CODE ABOVE
       break;
@@ -125,7 +130,11 @@ async function handleCommand(command) {
       console.log('Saving data...')
       // --------> WRITE YOUR CODE BELOW
       const [saveFileName] = args;
-      studentManagementSystem.saveToJson(saveFileName);
+        studentManagementSystem.saveToJson(saveFileName);
+        // console.log("Saving data: ", studentManagementSystem.displayStudents());
+      // } catch (error) {
+      //   console.log("Error loading data: ", error.message);
+      // }
 
       // --------> WRITE YOUR CODE ABOVE
 
@@ -141,12 +150,14 @@ async function handleCommand(command) {
       console.log('Loading data...')
       // --------> WRITE YOUR CODE BELOW
       const [loadFileName] = args;
-      studentManagementSystem.loadFromJSON(loadFileName);
-      console.log("Loaded data: ", studentManagementSystem.displayStudents());
+        studentManagementSystem.loadFromJSON(loadFileName);
+        // console.log("Loaded data: ", studentManagementSystem.displayStudents());
 
 
       // --------> WRITE YOUR CODE ABOVE
       break;
+
+
 
     case 'clear':
       /**
@@ -158,7 +169,7 @@ async function handleCommand(command) {
        */
       console.log('Clearing data...')
       // --------> WRITE YOUR CODE BELOW
-      studentManagementSystem.clearStudents();
+      studentManagementSystem.clearStudent();
 
       // --------> WRITE YOUR CODE ABOVE
       break;

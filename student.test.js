@@ -20,6 +20,7 @@ describe('LinkedList System Tests', () => {
 
   test('Adding and displaying students', () => {
     const students = createMockStudents();
+
     students.forEach(student => linkedList.addStudent(student));
 
     expect(linkedList.displayStudents()).toBe('AliceJohnson, BobSmith, CharlieBrown');

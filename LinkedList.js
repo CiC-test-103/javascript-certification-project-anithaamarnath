@@ -65,7 +65,6 @@ class LinkedList {
       this.tail.next = newNode;
       this.tail = newNode;
     }
-    
     this.length++; 
   
   } 
@@ -103,9 +102,9 @@ class LinkedList {
 
     if(this.tail === current) {
       this.tail = previous;
-    }
+      }
 
-    this.length--;
+      this.length--;
     
 }
 
@@ -115,12 +114,15 @@ class LinkedList {
    * RETURNS:   The Student or -1 if not found
    */
   findStudent(email) {
+    
     if(!this.head) return -1;
-
+   
     let current = this.head;
-
+ 
     while(current) {
-      if(current.data.getEmail() === email) {
+      if(current.data.getEmail() && 
+        typeof current.data.getEmail() === 'string' && 
+        current.data.getEmail() === email) {
         return current.data;
       }
       current = current.next;
@@ -134,10 +136,16 @@ class LinkedList {
    * RETURNS:   None
    */
   #clearStudents() {
+    
     this.head   = null;
     this.tail   = null;
     this.length = INITIAL_VALUE;
   }
+
+  clearStudent() {
+    return this.#clearStudents();
+  }
+
 
   /**
    * REQUIRES:  None
@@ -149,7 +157,7 @@ class LinkedList {
    */
   displayStudents() {
   
-    if(!this.head) return;
+    if(!this.head) return "No students";
 
     let current = this.head;
     let students = [];
@@ -170,11 +178,13 @@ class LinkedList {
    * RETURNS:   A sorted array of students by name
    */
   #sortStudentsByName() {
-    return this.sortStudentByName.sort((a,b) =>{
-      if(a.getName() < b.getName()) return -1;
-      if(a.getName() > b.getName()) return 1;
+    
+      return this.sortStudentByName.sort((a,b) =>{
+        if(a < b) return -1;
+        if(a > b) return 1;
       return 0;
     }); 
+
   }
 
   /**
@@ -197,9 +207,8 @@ class LinkedList {
       }
       current = current.next;
     }
+    
      this.sortStudentByName = filteredStudents;
-
-
     return this.#sortStudentsByName();
   }
 
@@ -223,23 +232,39 @@ class LinkedList {
     
     if(!fileName) throw new Error("Invalid file name");
 
-    let current = this.head;
+    let current         = this.head;
     const studentsArray = [];
 
     while(current) {
       studentsArray.push({
         name: current.data.getName(),
+        year: current.data.getYear(),
         email: current.data.getEmail(),
         specialization: current.data.getSpecialization(),
-        year: current.data.getYear()
       });
       current = current.next;
     }
+    try {
+      let existingArray = [];
+      try {
+        const fileData = await fs.readFile(fileName, 'utf-8');
 
-    const jsonData = JSON.stringify(studentsArray, null, 2);
-    await fs.writeFile(fileName, jsonData, 'utf8');
-   
-
+        if(fileData) {
+          existingArray = JSON.parse(fileData);
+          if(!Array.isArray(existingArray)) throw new Error("Invalid JSON format");
+        }
+      } catch(err) {
+        if(err.code !== 'ENOENT') {
+          console.log("Error reading file", err);
+          throw err;
+        }
+      }
+      const updatedArray = [...existingArray, ...studentsArray];
+      await fs.writeFile(fileName, JSON.stringify(updatedArray, null, 2), 'utf-8');
+    } catch (err) {
+      console.log("Error Saving", fileName);
+      throw err;
+    }
   }
 
   /**
@@ -253,16 +278,23 @@ class LinkedList {
   
     if(!fileName) throw new Error("Invalid file name");
 
-    const data = await fs.readFile(fileName, 'utf-8');
+    try {
+      const data = await fs.readFile(fileName, 'utf-8');
+  
     
-    const students = JSON.parse(data);
+      const students = JSON.parse(data);
     
-    this.#clearStudents();
-
-    students.forEach(student => {
-      this.addStudent(new Student(student.name, student.email, student.specialization, student.year));
-
-  });
+    
+      if(!Array.isArray(students)) throw new Error("Expected an array");
+    
+      this.clearStudent();
+      
+      students.forEach(student => {
+        this.addStudent(new Student(student.name, student.email, student.specialization, student.year));
+      });
+    } catch (error) {
+      console.log(`Error loaded data from ${fileName}`, error.message);
+  }
 }
 
 
