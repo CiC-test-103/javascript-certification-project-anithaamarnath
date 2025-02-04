@@ -2,6 +2,8 @@
 const { Student } = require('./Student')
 const fs = require('fs').promises;
 const INITIAL_VALUE = 0
+const FOUND         = 1;
+const NOT_FOUND     = -1;
 
 
 /**
@@ -42,7 +44,7 @@ class LinkedList {
   constructor() {
     this.head = null;
     this.tail = null;
-    this.length = 0;
+    this.length = INITIAL_VALUE;
   }
 
   /**
@@ -78,44 +80,48 @@ class LinkedList {
    * - Think about how removal might update head or tail
    */
   removeStudent(email) {
-
-    if(!this.head) return;
-
-    let current = this.head;
-    let previous = null;
-
-    if(current.data.getEmail() === email) {
-      this.head = current.next;
-      if(!this.head) this.tail = null;
-      this.length--;
-      return
+    if(!this.head) {
+      return null;
     }
 
-    while(current && current.data.getEmail() !== email) {
-      previous = current;
+    if(this.head.data.getEmail().toLowerCase() === String(email).toLowerCase()) {
+      this.head = this.head.next;
+      if(!this.head) {
+        this.tail = null;
+      }
+      this.length--;
+      return;
+    }
+
+    let current = this.head;
+    let prev = null;
+
+    while (current && current.data.getEmail().toLowerCase() !== String(email).toLowerCase()) {
+      prev = current;
       current = current.next;
     }
 
-    if(!current) return;
-
-    previous.next = current.next;
-
-    if(this.tail === current) {
-      this.tail = previous;
+    if(current) {
+      if(prev) {
+        prev.next = current.next;
       }
 
+      if(!current.next) {
+        this.tail = prev;
+      }
       this.length--;
-    
+    } 
+       
 }
 
   /**
    * REQUIRES:  email (String)
    * EFFECTS:   None
-   * RETURNS:   The Student or -1 if not found
+   * RETURNS:   The Student or NOT_FOUND if not found
    */
   findStudent(email) {
     
-    if(!this.head) return -1;
+    if(!this.head) return NOT_FOUND;
    
     let current = this.head;
  
@@ -127,7 +133,7 @@ class LinkedList {
       }
       current = current.next;
     }
-    return -1
+    return NOT_FOUND;
   }
 
   /**
@@ -180,9 +186,9 @@ class LinkedList {
   #sortStudentsByName() {
     
       return this.sortStudentByName.sort((a,b) =>{
-        if(a < b) return -1;
-        if(a > b) return 1;
-      return 0;
+        if(a < b) return NOT_FOUND;
+        if(a > b) return FOUND;
+      return INITIAL_VALUE;
     }); 
 
   }
